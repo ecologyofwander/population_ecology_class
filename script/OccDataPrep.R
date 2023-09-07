@@ -50,6 +50,9 @@ install.packages( "tidyverse" ) #actually a collection of packages
 # load packages:
 library( tidyverse )
 library(here)
+library(usethis)
+use_git_config(user.name = "ecologyofwander", user.email = "richardrachman@u.boisestate.edu")
+gitcreds::gitcreds_set()
 ## end of package load ###############
 ###################################################################
 #### Load or create data -----------------------------------------
