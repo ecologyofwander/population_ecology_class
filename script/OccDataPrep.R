@@ -53,6 +53,7 @@ library(here)
 library(usethis)
 use_git_config(user.name = "ecologyofwander", user.email = "richardrachman@u.boisestate.edu")
 gitcreds::gitcreds_set()
+gitcreds::gitcreds_get()
 ## end of package load ###############
 ###################################################################
 #### Load or create data -----------------------------------------
