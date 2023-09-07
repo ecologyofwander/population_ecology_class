@@ -85,11 +85,14 @@ head( obs_df ); dim( obs_df )
 
 # Let's define some parameters
 # How many sites were sampled?
+#100
 I <- length( unique( obs_df$o.sites ) )
 # What years were sampled (primary seasons)?
 yrrange <- sort( unique( obs_df$year) )
+#2007-2018
 #How many years (i.e., primary seasons )?
 T <- length( yrrange )
+#12
 # How many replicate surveys
 J <- 3
 #view
@@ -101,7 +104,7 @@ I; yrrange; T; J
     # Select obs_df:
 closeddf <- obs_df %>% 
     #filter only rows for last year:
-    dplyr::filter( year == yrrange[T] ) %>%
+    dplyr::filter(year == 2015) %>% 
     #select desired columns to keep:
     dplyr::select( o.sites, year, pres.j1, pres.j2, pres.j3,
             observer.j1, observer.j2, observer.j3 ) 
@@ -110,6 +113,7 @@ head( closeddf ); dim( closeddf )
 
 # How many detections each survey across our 100 sites?
 colSums( closeddf[, c("pres.j1", "pres.j2","pres.j3")])
+#12, 13, and 11
 
 # We also check for missing values in the response #
 colSums( is.na( closeddf[, c("pres.j1", "pres.j2","pres.j3")]) )
@@ -138,7 +142,7 @@ for( p in 1:length(prednames) ){
 }
 # What do you note? Any apparent issues with these data?
 # Answer:
-#
+#There seems to be a large gap in February minimum Temperature, and some gaps in AprMay maximum Temperature 
 # Let's plot how predictors vary annually:
 for( p in 1:length(prednames) ){
   # We can also incorporate site variability for habitat:
@@ -162,12 +166,13 @@ for( p in 1:length(prednames) ){
 }
 # Any notable sites? 
 # Answer:
-#
+#2008 Seemed to have less cheatgrass, 2016 also seemed to have less sagebrush.Feb.min.T seemed low for 2007, 2011, and 2018. AprMay.maxt seemed low for 2011.
 # Now that we are happy with no outliers, we can check for #
 # correlation among predictors. Why is this important?
 cor( preddf[ , prednames] )
 # Are there any predictors we need to worry about?
 # What correlations would be worrisome?
+#Yea I think min and max temp are very correlated, and this makes sense as climate from February to April and May is correlated. It could be an example of autocorrelation.
 ### end predictor check ----------------
 
 # Now that we are satisfied with our predictor data we can #
@@ -176,6 +181,7 @@ closeddf <- #select the columns we want to keep in preddf
   preddf %>% dplyr::select( o.sites, year, all_of(prednames) ) %>%
   right_join( closeddf, by = c("o.sites", "year") )
 # why did we use right_join instead of left_join?
+#So that we could match out predictors to the sites.
 # check output #note that I always check dimensions when joining
 # dataframes. Sometimes we add or substract rows unintentionally 
 # so it is good to check that your code had the desired result
@@ -214,11 +220,11 @@ write.csv(opendf, file = here("data", "opendf.csv"), row.names = FALSE)
 # for your presentation or ms, you do it here too:
 # Save the most recently viewed plot with ggsave() to define file type, resolution, 
 # and plot dimensions:
-ggsave("Data/AprMayTXYear.png", dpi=500, 
+ggsave(here("data","AprMayTXYear.png"), dpi=500, 
        height = 10, width = 15, units= "cm" )
 # or if you saved it as an object:
 #start by calling the file where you will save it
-tiff( 'Data/FebTXYear.tiff',
+tiff(here("data","FebTXYear.tiff"),
        height = 10, width = 15, units = 'cm', 
       compression = "lzw", res = 400 )
 #call the plot
